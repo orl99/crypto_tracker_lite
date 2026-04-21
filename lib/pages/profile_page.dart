@@ -41,7 +41,7 @@ class ProfilePage extends StatelessWidget {
                   ],
                   border: Border.all(color: Colors.amber, width: 3),
                   image: const DecorationImage(
-                    image: NetworkImage('https://i.pravatar.cc/150?img=11'),
+                    image: NetworkImage('https://practicaltyping.com/wp-content/uploads/2019/06/Hinata.PNG.png'), // Hinata :D
                     fit: BoxFit.cover,
                   ),
                 ),
