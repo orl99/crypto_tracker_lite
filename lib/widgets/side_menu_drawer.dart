@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../pages/profile_page.dart';
+import '../pages/favorites_page.dart';
 import '../theme/app_colors.dart';
 
 class SideMenuDrawer extends StatelessWidget {
@@ -68,6 +69,7 @@ class SideMenuDrawer extends StatelessWidget {
             text: 'Favoritos',
             onTap: () {
               Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const FavoritesPage()));
             },
           ),
           const SizedBox(height: 16),
