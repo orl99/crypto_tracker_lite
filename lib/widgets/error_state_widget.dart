@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 
 class ErrorStateWidget extends StatelessWidget {
   final VoidCallback onRetry;
@@ -15,9 +16,9 @@ class ErrorStateWidget extends StatelessWidget {
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.red, width: 4),
+              border: Border.all(color: AppColors.danger, width: 4),
             ),
-            child: const Icon(Icons.priority_high, color: Colors.red, size: 50),
+            child: const Icon(Icons.priority_high, color: AppColors.danger, size: 50),
           ),
           const SizedBox(height: 30),
           const Text(
@@ -40,15 +41,15 @@ class ErrorStateWidget extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
               decoration: BoxDecoration(
-                color: const Color(0xFF2C2C35),
+                color: AppColors.card,
                 borderRadius: BorderRadius.circular(30),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.refresh, color: Colors.purple[300], size: 20),
+                  Icon(Icons.refresh, color: AppColors.blue, size: 20),
                   const SizedBox(width: 8),
-                  Text('Reintentar', style: TextStyle(color: Colors.purple[300], fontWeight: FontWeight.w600)),
+                  Text('Reintentar', style: TextStyle(color: AppColors.blue, fontWeight: FontWeight.w600)),
                 ],
               ),
             ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../pages/profile_page.dart';
+import '../theme/app_colors.dart';
 
 class SideMenuDrawer extends StatelessWidget {
   const SideMenuDrawer({super.key});
@@ -7,7 +8,7 @@ class SideMenuDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: const Color(0xFF161616),
+      backgroundColor: AppColors.card,
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
@@ -15,7 +16,7 @@ class SideMenuDrawer extends StatelessWidget {
             height: 250,
             child: DrawerHeader(
               decoration: const BoxDecoration(
-                color: Color(0xFF161616),
+                color: AppColors.card,
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -27,12 +28,12 @@ class SideMenuDrawer extends StatelessWidget {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.amber.withOpacity(0.5),
+                          color: AppColors.gold.withValues(alpha: 0.5),
                           blurRadius: 15,
                           spreadRadius: 2,
                         ),
                       ],
-                      border: Border.all(color: Colors.amber, width: 2),
+                      border: Border.all(color: AppColors.gold, width: 2),
                       image: const DecorationImage(
                         image: NetworkImage('https://practicaltyping.com/wp-content/uploads/2019/06/Hinata.PNG.png'),
                         fit: BoxFit.cover,
@@ -62,8 +63,8 @@ class SideMenuDrawer extends StatelessWidget {
           ),
           _buildDrawerItem(
             icon: Icons.star,
-            iconColor: Colors.amber,
-            borderColor: Colors.amber.withOpacity(0.3),
+            iconColor: AppColors.gold,
+            borderColor: AppColors.gold.withValues(alpha: 0.3),
             text: 'Favoritos',
             onTap: () {
               Navigator.pop(context);
@@ -72,8 +73,8 @@ class SideMenuDrawer extends StatelessWidget {
           const SizedBox(height: 16),
           _buildDrawerItem(
             icon: Icons.person,
-            iconColor: Colors.blueAccent,
-            borderColor: Colors.blueAccent.withOpacity(0.3),
+            iconColor: AppColors.blue,
+            borderColor: AppColors.blue.withValues(alpha: 0.3),
             text: 'Perfil',
             onTap: () {
               Navigator.pop(context);
@@ -84,7 +85,7 @@ class SideMenuDrawer extends StatelessWidget {
           _buildDrawerItem(
             icon: Icons.settings,
             iconColor: Colors.grey,
-            borderColor: Colors.grey.withOpacity(0.3),
+            borderColor: Colors.grey.withValues(alpha: 0.3),
             text: 'Configuración',
             onTap: () {
               Navigator.pop(context);
@@ -110,7 +111,7 @@ class SideMenuDrawer extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFF222222),
+            color: AppColors.gradientStart,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: borderColor, width: 1.5),
           ),
@@ -119,7 +120,7 @@ class SideMenuDrawer extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: iconColor.withOpacity(0.15),
+                  color: iconColor.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(icon, color: iconColor, size: 20),

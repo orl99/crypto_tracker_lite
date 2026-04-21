@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../models/coin.dart';
 import '../bloc/favorites_bloc.dart';
 import '../pages/crypto_detail_page.dart';
+import '../theme/app_colors.dart';
 
 class CoinListTile extends StatelessWidget {
   final Coin coin;
@@ -13,7 +14,7 @@ class CoinListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isPositive = coin.priceChangePercentage24h >= 0;
-    final changeColor = isPositive ? Colors.green : Colors.red;
+    final changeColor = isPositive ? AppColors.success : AppColors.danger;
 
     return InkWell(
       onTap: () {
@@ -29,7 +30,7 @@ class CoinListTile extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.amber, width: 2),
+                border: Border.all(color: AppColors.gold, width: 2),
               ),
               child: ClipOval(
                 child: CachedNetworkImage(
@@ -48,7 +49,7 @@ class CoinListTile extends StatelessWidget {
                 children: [
                   Text(
                     coin.name,
-                    style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 16),
+                    style: const TextStyle(color: AppColors.gold, fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -63,7 +64,7 @@ class CoinListTile extends StatelessWidget {
               children: [
                 Text(
                   '\$${coin.currentPrice.toStringAsFixed(coin.currentPrice < 1 ? 6 : 2)}',
-                  style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 14),
+                  style: const TextStyle(color: AppColors.gold, fontWeight: FontWeight.bold, fontSize: 14),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -85,7 +86,7 @@ class CoinListTile extends StatelessWidget {
                   },
                   child: Icon(
                     isFav ? Icons.star : Icons.star_border,
-                    color: isFav ? Colors.amber : Colors.grey,
+                    color: isFav ? AppColors.gold : Colors.grey,
                     size: 28,
                   ),
                 );

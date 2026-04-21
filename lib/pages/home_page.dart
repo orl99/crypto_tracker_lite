@@ -4,6 +4,7 @@ import '../bloc/crypto_list_bloc.dart';
 import '../widgets/coin_list_tile.dart';
 import '../widgets/side_menu_drawer.dart';
 import '../widgets/error_state_widget.dart';
+import '../theme/app_colors.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -19,7 +20,7 @@ class HomePage extends StatelessWidget {
       body: BlocBuilder<CryptoListBloc, CryptoListState>(
         builder: (context, state) {
           if (state is CryptoListLoading || state is CryptoListInitial) {
-            return const Center(child: CircularProgressIndicator(color: Colors.amber));
+            return const Center(child: CircularProgressIndicator(color: AppColors.gold));
           } else if (state is CryptoListError) {
             if (state.isRateLimit) {
               return ErrorStateWidget(
@@ -32,7 +33,7 @@ class HomePage extends StatelessWidget {
               children: [
                 if (state.isRateLimitExceeded)
                   Container(
-                    color: const Color(0xFFFF8C00),
+                    color: AppColors.warning,
                     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
                     child: Row(
                       children: [
@@ -57,15 +58,15 @@ class HomePage extends StatelessWidget {
                   ),
                 Expanded(
                   child: RefreshIndicator(
-                    color: Colors.amber,
-                    backgroundColor: const Color(0xFF2C2C35),
+                    color: AppColors.gold,
+                    backgroundColor: AppColors.card,
                     onRefresh: () async {
                       context.read<CryptoListBloc>().add(FetchCryptoList());
                     },
                     child: ListView.separated(
                       physics: const AlwaysScrollableScrollPhysics(),
                       itemCount: state.coins.length,
-                      separatorBuilder: (context, index) => const Divider(color: Color(0xFF2A2A2A), height: 1),
+                      separatorBuilder: (context, index) => const Divider(color: AppColors.gradientStart, height: 1),
                       itemBuilder: (context, index) {
                         return CoinListTile(coin: state.coins[index]);
                       },

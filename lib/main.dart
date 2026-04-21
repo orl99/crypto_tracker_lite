@@ -9,6 +9,7 @@ import 'bloc/crypto_detail_bloc.dart';
 import 'bloc/favorites_bloc.dart';
 import 'pages/home_page.dart';
 import 'providers/dependency_injection.dart';
+import 'theme/app_colors.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,14 +43,14 @@ class MyApp extends StatelessWidget {
           title: 'CryptoTracker Lite',
           debugShowCheckedModeBanner: false,
           theme: ThemeData.dark().copyWith(
-            scaffoldBackgroundColor: const Color(0xFF1A1A1A), // Dark mode base
+            scaffoldBackgroundColor: AppColors.background, // Dark mode base
             appBarTheme: const AppBarTheme(
-              backgroundColor: Color(0xFF1A1A1A),
+              backgroundColor: AppColors.background,
               elevation: 0,
             ),
             colorScheme: const ColorScheme.dark(
-              primary: Colors.amber,
-              secondary: Colors.amberAccent,
+              primary: AppColors.gold,
+              secondary: AppColors.goldAlt,
             ),
           ),
           home: const HomePage(),
