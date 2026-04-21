@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'api/api_client.dart';
 import 'services/crypto_service.dart';
 import 'services/favorites_service.dart';
 import 'bloc/crypto_list_bloc.dart';
 import 'bloc/crypto_detail_bloc.dart';
 import 'bloc/favorites_bloc.dart';
 import 'pages/home_page.dart';
+import 'providers/dependency_injection.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,14 +24,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        Provider<ApiClient>(create: (_) => ApiClient()),
-        ProxyProvider<ApiClient, CryptoService>(
-          update: (_, apiClient, __) => CryptoService(apiClient),
-        ),
-        Provider<FavoritesService>(create: (_) => FavoritesService(prefs)),
-      ],
+    return AppDependencyInjector(
+      prefs: prefs,
       child: MultiBlocProvider(
         providers: [
           BlocProvider<CryptoListBloc>(
