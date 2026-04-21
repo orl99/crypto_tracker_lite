@@ -28,20 +28,51 @@ class HomePage extends StatelessWidget {
             }
             return Center(child: Text(state.message, style: const TextStyle(color: Colors.white)));
           } else if (state is CryptoListLoaded) {
-            return RefreshIndicator(
-              color: Colors.amber,
-              backgroundColor: const Color(0xFF2C2C35),
-              onRefresh: () async {
-                context.read<CryptoListBloc>().add(FetchCryptoList());
-              },
-              child: ListView.separated(
-                physics: const AlwaysScrollableScrollPhysics(),
-                itemCount: state.coins.length,
-                separatorBuilder: (context, index) => const Divider(color: Color(0xFF2A2A2A), height: 1),
-                itemBuilder: (context, index) {
-                  return CoinListTile(coin: state.coins[index]);
-                },
-              ),
+            return Column(
+              children: [
+                if (state.isRateLimitExceeded)
+                  Container(
+                    color: const Color(0xFFFF8C00),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.warning_amber_rounded, color: Colors.white),
+                        const SizedBox(width: 12),
+                        const Expanded(
+                          child: Text(
+                            'Límite de solicitudes excedido.\nReintentando...',
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close, color: Colors.white),
+                          onPressed: () {
+                            context.read<CryptoListBloc>().add(DismissRateLimitWarning());
+                          },
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                        ),
+                      ],
+                    ),
+                  ),
+                Expanded(
+                  child: RefreshIndicator(
+                    color: Colors.amber,
+                    backgroundColor: const Color(0xFF2C2C35),
+                    onRefresh: () async {
+                      context.read<CryptoListBloc>().add(FetchCryptoList());
+                    },
+                    child: ListView.separated(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: state.coins.length,
+                      separatorBuilder: (context, index) => const Divider(color: Color(0xFF2A2A2A), height: 1),
+                      itemBuilder: (context, index) {
+                        return CoinListTile(coin: state.coins[index]);
+                      },
+                    ),
+                  ),
+                ),
+              ],
             );
           }
           return const SizedBox.shrink();

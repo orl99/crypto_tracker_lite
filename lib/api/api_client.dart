@@ -18,7 +18,7 @@ class ApiClient {
 
     if (_blockUntil != null) {
       if (DateTime.now().isBefore(_blockUntil!)) {
-        throw RateLimitException('Too Many Requests. Please wait.');
+        throw RateLimitException('Se superó el límite de peticiones. Por favor, espera.');
       } else {
         _blockUntil = null;
       }
@@ -42,7 +42,7 @@ class ApiClient {
         return data;
       } else if (response.statusCode == 429) {
         _blockUntil = DateTime.now().add(blockDuration);
-        throw RateLimitException('Too Many Requests. Please wait.');
+        throw RateLimitException('Se superó el límite de peticiones. Por favor, espera.');
       } else {
         throw Exception('Failed to load data (Status ${response.statusCode})');
       }
