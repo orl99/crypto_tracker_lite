@@ -32,6 +32,7 @@ Una aplicación móvil built con **Flutter** que permite rastrear precios de cri
 ## ⚡ Instrucciones Rápidas
 
 ### Requisitos previos
+
 - Flutter 3.13+
 - Dart 3.0+
 - Xcode (iOS) o Android Studio (Android)
@@ -58,6 +59,7 @@ flutter run --release
 ```
 
 ### Ejecutar tests
+
 ```bash
 # Tests unitarios
 flutter test
@@ -256,12 +258,12 @@ graph LR
 
 ### Todos los BLoCs del proyecto:
 
-| BLoC | Events | States |
-|------|--------|--------|
-| **CryptoListBloc** | `FetchCryptoList`, `DismissRateLimitWarning` | `Initial`, `Loading`, `Loaded(coins, isRateLimitExceeded)`, `Error(message, isRateLimit)` |
-| **CryptoDetailBloc** | `FetchCryptoDetail(id)` | `Initial`, `Loading`, `Loaded(chart, detail)`, `Error(message, isRateLimit)` |
-| **FavoritesBloc** | `LoadFavorites`, `ToggleFavorite(coinId)` | `FavoritesLoaded(favoriteIds)` |
-| **LocaleBloc** | `ChangeLocale(locale)` | `LocaleState(locale)` |
+| BLoC                 | Events                                       | States                                                                                    |
+| -------------------- | -------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| **CryptoListBloc**   | `FetchCryptoList`, `DismissRateLimitWarning` | `Initial`, `Loading`, `Loaded(coins, isRateLimitExceeded)`, `Error(message, isRateLimit)` |
+| **CryptoDetailBloc** | `FetchCryptoDetail(id)`                      | `Initial`, `Loading`, `Loaded(chart, detail)`, `Error(message, isRateLimit)`              |
+| **FavoritesBloc**    | `LoadFavorites`, `ToggleFavorite(coinId)`    | `FavoritesLoaded(favoriteIds)`                                                            |
+| **LocaleBloc**       | `ChangeLocale(locale)`                       | `LocaleState(locale)`                                                                     |
 
 ---
 
@@ -308,7 +310,7 @@ sequenceDiagram
 
     UI->>AC: get("/coins/markets...")
     AC->>AC: ¿Bloqueado por 429?
-    
+
     alt No bloqueado
         AC->>Cache: ¿Existe en caché y < 15s?
         alt Caché válido
@@ -337,13 +339,13 @@ sequenceDiagram
 ```mermaid
 stateDiagram-v2
     [*] --> CryptoListLoaded: Carga exitosa
-    
+
     CryptoListLoaded --> CryptoListLoaded: FetchCryptoList\n(429 + datos previos)\nisRateLimitExceeded=true
-    
+
     CryptoListLoaded --> CryptoListLoaded: DismissRateLimitWarning\nisRateLimitExceeded=false
-    
+
     CryptoListLoaded --> CryptoListLoaded: FetchCryptoList\n(éxito)\nisRateLimitExceeded=false
-    
+
     [*] --> CryptoListError: FetchCryptoList\n(429, sin datos previos)\nisRateLimit=true
 ```
 
@@ -359,7 +361,7 @@ graph TD
     BLOC["BLoC (Cualquiera)"]
     OBS["AppBlocObserver"]
     LOG["Consola / Logging Service"]
-    
+
     BLOC -->|"onError(error, stackTrace)"| OBS
     OBS -->|"Formatear y Loggear"| LOG
     LOG -->|"Debug: [CryptoListBloc] Error..."| DEV["Desarrollador"]
@@ -381,7 +383,7 @@ graph LR
     CODE["lib/l10n/app_localizations.dart"]
     EXT["context.l10n (Extension)"]
     UI["Widgets / Pages"]
-    
+
     ARB --> GEN
     GEN --> CODE
     CODE --> EXT
@@ -449,36 +451,38 @@ graph TD
 
 ## Resumen de Patrones Utilizados
 
-| Patrón | Implementación | Archivo(s) Clave |
-|--------|---------------|-------------------|
-| **BLoC Pattern** | Gestión de estado reactiva con Events y States | `lib/bloc/*.dart` |
-| **Repository/Service Pattern** | Abstracción de fuentes de datos | `lib/services/*.dart` |
-| **Provider (DI)** | Inyección de dependencias con widget wrapper | `lib/providers/dependency_injection.dart` |
-| **In-Memory Cache** | Map con TTL de 15s para evitar llamadas repetidas | `lib/api/api_client.dart` |
-| **Design Tokens** | Centralización de colores con constantes estáticas | `lib/theme/app_colors.dart` |
-| **Global Logging** | Seguimiento de errores y transiciones con Observer | `lib/app_bloc_observer.dart` |
-| **i18n (L10n)** | Soporte multi-idioma (ES/EN) con extensión de context | `lib/l10n/` |
-| **Layered Architecture** | Separación estricta: API → Services → BLoC → UI | Toda la estructura `lib/` |
-| **Graceful Degradation** | Rate Limit 429: mostrar datos previos + banner | `crypto_list_bloc.dart` + `rate_limit_banner.dart` |
-| **Local Persistence** | SharedPreferences para favoritos y locale | `lib/services/favorites_service.dart` + `locale_bloc.dart` |
+| Patrón                         | Implementación                                        | Archivo(s) Clave                                           |
+| ------------------------------ | ----------------------------------------------------- | ---------------------------------------------------------- |
+| **BLoC Pattern**               | Gestión de estado reactiva con Events y States        | `lib/bloc/*.dart`                                          |
+| **Repository/Service Pattern** | Abstracción de fuentes de datos                       | `lib/services/*.dart`                                      |
+| **Provider (DI)**              | Inyección de dependencias con widget wrapper          | `lib/providers/dependency_injection.dart`                  |
+| **In-Memory Cache**            | Map con TTL de 15s para evitar llamadas repetidas     | `lib/api/api_client.dart`                                  |
+| **Design Tokens**              | Centralización de colores con constantes estáticas    | `lib/theme/app_colors.dart`                                |
+| **Global Logging**             | Seguimiento de errores y transiciones con Observer    | `lib/app_bloc_observer.dart`                               |
+| **i18n (L10n)**                | Soporte multi-idioma (ES/EN) con extensión de context | `lib/l10n/`                                                |
+| **Layered Architecture**       | Separación estricta: API → Services → BLoC → UI       | Toda la estructura `lib/`                                  |
+| **Graceful Degradation**       | Rate Limit 429: mostrar datos previos + banner        | `crypto_list_bloc.dart` + `rate_limit_banner.dart`         |
+| **Local Persistence**          | SharedPreferences para favoritos y locale             | `lib/services/favorites_service.dart` + `locale_bloc.dart` |
 
 ## 10. Manejo del Error HTTP 429 (Rate Limit)
 
 ### Estrategia de Manejo
 
 **1. En el `ApiClient` (lib/api/api_client.dart):**
+
 - Detecta la respuesta `429` y lanza `RateLimitException`.
 - Aplica un bloqueo temporal interno para no saturar aún más la API con reintentos.
 
 **2. En los BLoCs (CryptoListBloc, CryptoDetailBloc):**
+
 - Capturan la `RateLimitException`.
 - **Si hay datos previos cacheados:** emiten `CryptoListLoaded` / `CryptoDetailLoaded` con `isRateLimitExceeded = true`.
 - **Si NO hay datos previos:** emiten `CryptoDetailError` / `CryptoListError` con `isRateLimit = true`.
 
 **3. En la UI (RateLimitBanner):**
+
 - Escucha ambos BLoCs (`CryptoListBloc` y `CryptoDetailBloc`).
 - Muestra un banner naranja (`AppColors.warning`) con el mensaje "Límite de solicitudes excedido".
 - Permite descartar el aviso sin perder los datos existentes.
-
 
 <img width="1495" height="836" alt="On Many reques" src="https://github.com/user-attachments/assets/b61e8400-f0bc-4943-b403-2889895d4288" />
