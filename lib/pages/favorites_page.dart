@@ -6,7 +6,8 @@ import '../widgets/coin_list_tile.dart';
 import '../theme/app_colors.dart';
 
 class FavoritesPage extends StatelessWidget {
-  const FavoritesPage({super.key});
+  final dynamic cacheManager;
+  const FavoritesPage({super.key, this.cacheManager});
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +54,10 @@ class FavoritesPage extends StatelessWidget {
                     itemCount: favoriteCoins.length,
                     separatorBuilder: (context, index) => const Divider(color: AppColors.gradientStart, height: 1),
                     itemBuilder: (context, index) {
-                      return CoinListTile(coin: favoriteCoins[index]);
+                      return CoinListTile(
+                        coin: favoriteCoins[index],
+                        cacheManager: cacheManager,
+                      );
                     },
                   );
                 }
