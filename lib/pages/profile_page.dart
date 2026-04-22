@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:crypto_tracker_lite/l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
-import '../widgets/rate_limit_banner.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -29,7 +28,6 @@ class ProfilePage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const RateLimitBanner(),
             const SizedBox(height: 30),
             Center(
               child: Container(

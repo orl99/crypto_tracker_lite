@@ -21,7 +21,12 @@ lib/
 ├── bloc/                 # Capa de Gestión de Estado
 │   ├── crypto_list_bloc.dart # BLoC: Lista principal + Rate Limit
 │   ├── crypto_detail_bloc.dart # BLoC: Detalle + Gráfica
-│   └── favorites_bloc.dart   # BLoC: Favoritos (toggle/load)
+│   ├── favorites_bloc.dart   # BLoC: Favoritos (toggle/load)
+│   └── locale_bloc.dart      # BLoC: Internacionalización (idiomas)
+├── l10n/                 # Localización (i18n)
+│   ├── app_es.arb            # Traducciones al español
+│   ├── app_en.arb            # Traducciones al inglés
+│   └── app_localizations.dart# Clase generada + Extensión context.l10n
 ├── providers/            # Capa de Inyección de Dependencias
 │   └── dependency_injection.dart # Widget AppDependencyInjector
 ├── pages/                # Capa de Presentación (Pantallas)
@@ -32,9 +37,11 @@ lib/
 ├── widgets/              # Capa de Presentación (Componentes reutilizables)
 │   ├── coin_list_tile.dart
 │   ├── side_menu_drawer.dart
-│   └── error_state_widget.dart
+│   ├── rate_limit_banner.dart # Banner global de 429
+│   └── error_state_widget.dart# Pantalla de error unificada
 ├── theme/                # Sistema de Diseño
 │   └── app_colors.dart       # Design Tokens (paleta de colores centralizada)
+├── app_bloc_observer.dart    # Logging global de errores y transiciones
 └── main.dart             # Punto de entrada
 ```
 
@@ -58,11 +65,13 @@ graph TD
         CLB["CryptoListBloc"]
         CDB["CryptoDetailBloc"]
         FB["FavoritesBloc"]
+        LB["LocaleBloc"]
     end
 
     subgraph SERVICES["🔧 Servicios"]
         CS["CryptoService"]
         FS["FavoritesService"]
+        OBS["AppBlocObserver (Logger)"]
     end
 
     subgraph DATA["📦 Datos"]
@@ -137,6 +146,7 @@ graph LR
 | **CryptoListBloc** | `FetchCryptoList`, `DismissRateLimitWarning` | `Initial`, `Loading`, `Loaded(coins, isRateLimitExceeded)`, `Error(message, isRateLimit)` |
 | **CryptoDetailBloc** | `FetchCryptoDetail(id)` | `Initial`, `Loading`, `Loaded(chart, detail)`, `Error(message, isRateLimit)` |
 | **FavoritesBloc** | `LoadFavorites`, `ToggleFavorite(coinId)` | `FavoritesLoaded(favoriteIds)` |
+| **LocaleBloc** | `ChangeLocale(locale)` | `LocaleState(locale)` |
 
 ---
 
@@ -155,6 +165,7 @@ graph TD
         B1["BlocProvider&lt;CryptoListBloc&gt;"]
         B2["BlocProvider&lt;CryptoDetailBloc&gt;"]
         B3["BlocProvider&lt;FavoritesBloc&gt;"]
+        B4["BlocProvider&lt;LocaleBloc&gt;"]
     end
 
     P1 --> P2
@@ -226,7 +237,45 @@ stateDiagram-v2
 
 ---
 
-## 7. Persistencia Local (Favoritos)
+## 7. Manejo Global de Errores (AppBlocObserver)
+
+```mermaid
+graph TD
+    BLOC["BLoC (Cualquiera)"]
+    OBS["AppBlocObserver"]
+    LOG["Consola / Logging Service"]
+    
+    BLOC -->|"onError(error, stackTrace)"| OBS
+    OBS -->|"Formatear y Loggear"| LOG
+    LOG -->|"Debug: [CryptoListBloc] Error..."| DEV["Desarrollador"]
+```
+
+> [!TIP]
+> `AppBlocObserver` centraliza todos los fallos del flujo de datos, permitiendo diagnosticar problemas de red o de lógica sin ensuciar los archivos de UI o BLoC con `print()` o `debugPrint()`.
+
+---
+
+## 8. Internacionalización (i18n)
+
+El proyecto utiliza el sistema estándar de Flutter con archivos `.arb` y generación de código personalizada para mayor flexibilidad.
+
+```mermaid
+graph LR
+    ARB["Archivos .arb (es, en)"]
+    GEN["flutter gen-l10n"]
+    CODE["lib/l10n/app_localizations.dart"]
+    EXT["context.l10n (Extension)"]
+    UI["Widgets / Pages"]
+    
+    ARB --> GEN
+    GEN --> CODE
+    CODE --> EXT
+    EXT --> UI
+```
+
+---
+
+## 9. Persistencia Local (Favoritos y Config)
 
 ```mermaid
 graph LR
@@ -277,6 +326,8 @@ graph TD
     HOME -->|"Drawer > Favoritos"| FAVS
     HOME -->|"Drawer > Perfil"| PROFILE
     FAVS -->|"Tap en CoinListTile"| DETAIL
+    PROFILE -->|"Cambio de Idioma"| LB["LocaleBloc"]
+    LB -->|"Actualizar UI"| HOME
 ```
 
 ---
@@ -290,6 +341,8 @@ graph TD
 | **Provider (DI)** | Inyección de dependencias con widget wrapper | `lib/providers/dependency_injection.dart` |
 | **In-Memory Cache** | Map con TTL de 15s para evitar llamadas repetidas | `lib/api/api_client.dart` |
 | **Design Tokens** | Centralización de colores con constantes estáticas | `lib/theme/app_colors.dart` |
+| **Global Logging** | Seguimiento de errores y transiciones con Observer | `lib/app_bloc_observer.dart` |
+| **i18n (L10n)** | Soporte multi-idioma (ES/EN) con extensión de context | `lib/l10n/` |
 | **Layered Architecture** | Separación estricta: API → Services → BLoC → UI | Toda la estructura `lib/` |
-| **Graceful Degradation** | Rate Limit 429: mostrar datos previos + banner | `crypto_list_bloc.dart` + `home_page.dart` |
-| **Local Persistence** | SharedPreferences para favoritos | `lib/services/favorites_service.dart` |
+| **Graceful Degradation** | Rate Limit 429: mostrar datos previos + banner | `crypto_list_bloc.dart` + `rate_limit_banner.dart` |
+| **Local Persistence** | SharedPreferences para favoritos y locale | `lib/services/favorites_service.dart` + `locale_bloc.dart` |
