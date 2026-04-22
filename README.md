@@ -103,7 +103,6 @@ flutter test --coverage
   <tr>
     <td align="center">
       <strong>Perfil</strong><br>
-      Cambio de idioma (ES/EN) y configuración<br><br>
       <img width="250" src="https://github.com/user-attachments/assets/c09215f0-42c6-4d7b-9606-af4225043f8d" />
     </td>
     <td align="center">
