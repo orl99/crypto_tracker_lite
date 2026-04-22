@@ -8,8 +8,13 @@ import '../theme/app_colors.dart';
 
 class CoinListTile extends StatelessWidget {
   final Coin coin;
+  final dynamic cacheManager;
 
-  const CoinListTile({super.key, required this.coin});
+  const CoinListTile({
+    super.key, 
+    required this.coin,
+    this.cacheManager,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +42,7 @@ class CoinListTile extends StatelessWidget {
                   imageUrl: coin.image,
                   width: 48,
                   height: 48,
+                  cacheManager: cacheManager,
                   placeholder: (context, url) => const CircularProgressIndicator(),
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
