@@ -24,9 +24,15 @@ class FetchCryptoDetail extends CryptoDetailEvent {
   FetchCryptoDetail(this.id);
 }
 
+/// [CryptoDetailBloc] is responsible for managing the state of crypto detail screens 
+/// 
+/// It handles loading, displaying, and error states for detailed coin information 
+/// and market charts, including specific handling for rate limit exceptions
 class CryptoDetailBloc extends Bloc<CryptoDetailEvent, CryptoDetailState> {
   final CryptoService _cryptoService;
 
+  /// Creates a new [CryptoDetailBloc]
+  /// Requires a [CryptoService] instance to fetch coin data
   CryptoDetailBloc(this._cryptoService) : super(CryptoDetailInitial()) {
     on<FetchCryptoDetail>((event, emit) async {
       emit(CryptoDetailLoading());
