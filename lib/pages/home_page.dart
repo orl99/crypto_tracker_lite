@@ -13,9 +13,10 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.appTitle, style: const TextStyle(fontWeight: FontWeight.w400)),
+        title: Text(l10n.appTitle, style: const TextStyle(fontWeight: FontWeight.w400)),
         centerTitle: true,
       ),
       drawer: const SideMenuDrawer(),
@@ -43,7 +44,7 @@ class HomePage extends StatelessWidget {
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            AppLocalizations.of(context)!.rateLimitBanner,
+                            l10n.rateLimitBanner,
                             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
                           ),
                         ),

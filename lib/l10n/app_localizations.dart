@@ -98,6 +98,11 @@ abstract class AppLocalizations {
   String get english;
 }
 
+/// Extension to simplify access to [AppLocalizations] from the [BuildContext].
+extension AppLocalizationsX on BuildContext {
+  AppLocalizations get l10n => AppLocalizations.of(this)!;
+}
+
 class _AppLocalizationsDelegate
     extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();

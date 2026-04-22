@@ -7,11 +7,12 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.background,
-        title: Text(AppLocalizations.of(context)!.myProfile, style: const TextStyle(fontWeight: FontWeight.w400)),
+        title: Text(l10n.myProfile, style: const TextStyle(fontWeight: FontWeight.w400)),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
@@ -80,7 +81,7 @@ class ProfilePage extends StatelessWidget {
                   _buildProfileItem(
                     icon: Icons.person_outline,
                     iconColor: AppColors.blue,
-                    title: AppLocalizations.of(context)!.nameLabel,
+                    title: l10n.nameLabel,
                     value: 'Bryan Vazquez',
                   ),
                   const Padding(
@@ -90,7 +91,7 @@ class ProfilePage extends StatelessWidget {
                   _buildProfileItem(
                     icon: Icons.mail_outline,
                     iconColor: AppColors.warning,
-                    title: AppLocalizations.of(context)!.emailLabel,
+                    title: l10n.emailLabel,
                     value: 'bryan@correo.com',
                   ),
                 ],

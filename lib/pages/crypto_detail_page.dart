@@ -27,10 +27,11 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.detail, style: const TextStyle(fontWeight: FontWeight.w400)),
+        title: Text(l10n.detail, style: const TextStyle(fontWeight: FontWeight.w400)),
         centerTitle: true,
         backgroundColor: AppColors.background,
         elevation: 0,
@@ -90,7 +91,7 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
             ),
             const SizedBox(height: 30),
             Text(
-              AppLocalizations.of(context)!.currentPrice,
+              l10n.currentPrice,
               style: const TextStyle(color: Colors.grey, fontSize: 14),
             ),
             const SizedBox(height: 8),
@@ -136,17 +137,17 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
             const SizedBox(height: 30),
             Row(
               children: [
-                Expanded(child: _buildStatCard(AppLocalizations.of(context)!.high24h, '\$${widget.coin.high24h.toStringAsFixed(2)}', Icons.arrow_outward, AppColors.success)),
+                Expanded(child: _buildStatCard(l10n.high24h, '\$${widget.coin.high24h.toStringAsFixed(2)}', Icons.arrow_outward, AppColors.success)),
                 const SizedBox(width: 16),
-                Expanded(child: _buildStatCard(AppLocalizations.of(context)!.low24h, '\$${widget.coin.low24h.toStringAsFixed(2)}', Icons.call_received, AppColors.danger)),
+                Expanded(child: _buildStatCard(l10n.low24h, '\$${widget.coin.low24h.toStringAsFixed(2)}', Icons.call_received, AppColors.danger)),
               ],
             ),
             const SizedBox(height: 16),
             Row(
               children: [
-                Expanded(child: _buildStatCard(AppLocalizations.of(context)!.marketCap, '\$${(widget.coin.marketCap / 1e9).toStringAsFixed(2)}B', Icons.account_balance_wallet, AppColors.blue)),
+                Expanded(child: _buildStatCard(l10n.marketCap, '\$${(widget.coin.marketCap / 1e9).toStringAsFixed(2)}B', Icons.account_balance_wallet, AppColors.blue)),
                 const SizedBox(width: 16),
-                Expanded(child: _buildStatCard(AppLocalizations.of(context)!.volume24h, '\$${(widget.coin.totalVolume / 1e6).toStringAsFixed(2)}M', Icons.swap_horiz, AppColors.warning)),
+                Expanded(child: _buildStatCard(l10n.volume24h, '\$${(widget.coin.totalVolume / 1e6).toStringAsFixed(2)}M', Icons.swap_horiz, AppColors.warning)),
               ],
             ),
             const SizedBox(height: 30),
@@ -163,7 +164,7 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        AppLocalizations.of(context)!.historicPrice7d,
+                        l10n.historicPrice7d,
                         style: const TextStyle(color: Colors.grey, fontSize: 16),
                       ),
                       Container(
@@ -192,11 +193,11 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
                           return const Center(child: CircularProgressIndicator(color: AppColors.gold));
                         } else if (state is CryptoDetailError) {
                           if (state.isRateLimit) {
-                            return Center(child: Text(AppLocalizations.of(context)!.rateLimitChart, style: const TextStyle(color: Colors.red)));
+                            return Center(child: Text(l10n.rateLimitChart, style: const TextStyle(color: Colors.red)));
                           }
-                          return Center(child: Text(AppLocalizations.of(context)!.errorLoadingChart, style: const TextStyle(color: Colors.red)));
+                          return Center(child: Text(l10n.errorLoadingChart, style: const TextStyle(color: Colors.red)));
                         } else if (state is CryptoDetailLoaded) {
-                          return _buildChart(state.chart.prices, widget.coin.priceChangePercentage24h >= 0 ? AppColors.success : AppColors.danger);
+                          return _buildChart(state.chart.prices, widget.coin.priceChangePercentage24h >= 0 ? AppColors.success : AppColors.danger, l10n);
                         }
                         return const SizedBox.shrink();
                       },
@@ -207,7 +208,7 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
             ),
             const SizedBox(height: 40),
             Text(
-              AppLocalizations.of(context)!.aboutSection,
+              l10n.aboutSection,
               style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
@@ -262,7 +263,7 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
     );
   }
 
-  Widget _buildChart(List<List<double>> prices, Color chartColor) {
+  Widget _buildChart(List<List<double>> prices, Color chartColor, AppLocalizations l10n) {
     if (prices.isEmpty) return const SizedBox.shrink();
 
     final spots = prices.map((e) => FlSpot(e[0], e[1])).toList();
@@ -297,8 +298,8 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
             sideTitles: SideTitles(
               showTitles: true,
               getTitlesWidget: (value, meta) {
-                if (value == minX) return Padding(padding: const EdgeInsets.only(top: 8), child: Text(AppLocalizations.of(context)!.chartStart, style: const TextStyle(color: Colors.grey, fontSize: 10)));
-                if (value == maxX) return Padding(padding: const EdgeInsets.only(top: 8), child: Text(AppLocalizations.of(context)!.chartToday, style: const TextStyle(color: Colors.grey, fontSize: 10)));
+                if (value == minX) return Padding(padding: const EdgeInsets.only(top: 8), child: Text(l10n.chartStart, style: const TextStyle(color: Colors.grey, fontSize: 10)));
+                if (value == maxX) return Padding(padding: const EdgeInsets.only(top: 8), child: Text(l10n.chartToday, style: const TextStyle(color: Colors.grey, fontSize: 10)));
                 return const SizedBox.shrink();
               },
             ),

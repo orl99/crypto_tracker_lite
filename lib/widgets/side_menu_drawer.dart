@@ -11,7 +11,7 @@ class SideMenuDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = context.l10n;
     return Drawer(
       backgroundColor: AppColors.card,
       child: ListView(

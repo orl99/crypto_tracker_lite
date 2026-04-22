@@ -9,6 +9,7 @@ class ErrorStateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -23,14 +24,14 @@ class ErrorStateWidget extends StatelessWidget {
           ),
           const SizedBox(height: 30),
           Text(
-            AppLocalizations.of(context)!.errorTitle,
+            l10n.errorTitle,
             style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           const SizedBox(height: 15),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40.0),
             child: Text(
-              AppLocalizations.of(context)!.errorRateLimitBody,
+              l10n.errorRateLimitBody,
               textAlign: TextAlign.center,
               style: const TextStyle(color: Colors.grey, fontSize: 14),
             ),
@@ -50,7 +51,7 @@ class ErrorStateWidget extends StatelessWidget {
                 children: [
                   Icon(Icons.refresh, color: AppColors.blue, size: 20),
                   const SizedBox(width: 8),
-                  Text(AppLocalizations.of(context)!.retry, style: TextStyle(color: AppColors.blue, fontWeight: FontWeight.w600)),
+                  Text(l10n.retry, style: TextStyle(color: AppColors.blue, fontWeight: FontWeight.w600)),
                 ],
               ),
             ),
