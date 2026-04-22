@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:crypto_tracker_lite/l10n/app_localizations.dart';
 import '../bloc/crypto_list_bloc.dart';
 import '../bloc/favorites_bloc.dart';
 import '../widgets/coin_list_tile.dart';
@@ -11,10 +12,11 @@ class FavoritesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Favoritos ⭐', style: TextStyle(fontWeight: FontWeight.w400)),
+        title: Text(l10n.favoritesTitle, style: const TextStyle(fontWeight: FontWeight.w400)),
         centerTitle: true,
         backgroundColor: AppColors.background,
         elevation: 0,
@@ -46,7 +48,7 @@ class FavoritesPage extends StatelessWidget {
                       .toList();
 
                   if (favoriteCoins.isEmpty) {
-                    return _buildEmptyState();
+                    return _buildEmptyState(context);
                   }
 
                   return ListView.separated(
@@ -71,20 +73,21 @@ class FavoritesPage extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.star_border, size: 80, color: AppColors.gold.withValues(alpha: 0.3)),
           const SizedBox(height: 16),
-          const Text(
-            'Aún no tienes favoritos',
-            style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+          Text(
+            l10n.noFavoritesYet,
+            style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
-            'Toca la estrella en cualquier moneda\npara añadirla aquí',
+            l10n.noFavoritesHint,
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.grey[400], fontSize: 14),
           ),

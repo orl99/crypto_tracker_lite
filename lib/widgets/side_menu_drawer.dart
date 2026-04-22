@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:crypto_tracker_lite/l10n/app_localizations.dart';
+import '../bloc/locale_bloc.dart';
 import '../pages/profile_page.dart';
 import '../pages/favorites_page.dart';
 import '../theme/app_colors.dart';
@@ -8,6 +11,7 @@ class SideMenuDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Drawer(
       backgroundColor: AppColors.card,
       child: ListView(
@@ -66,7 +70,7 @@ class SideMenuDrawer extends StatelessWidget {
             icon: Icons.star,
             iconColor: AppColors.gold,
             borderColor: AppColors.gold.withValues(alpha: 0.3),
-            text: 'Favoritos',
+            text: l10n.favorites,
             onTap: () {
               Navigator.pop(context);
               Navigator.push(context, MaterialPageRoute(builder: (_) => const FavoritesPage()));
@@ -77,7 +81,7 @@ class SideMenuDrawer extends StatelessWidget {
             icon: Icons.person,
             iconColor: AppColors.blue,
             borderColor: AppColors.blue.withValues(alpha: 0.3),
-            text: 'Perfil',
+            text: l10n.profile,
             onTap: () {
               Navigator.pop(context);
               Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfilePage()));
@@ -88,10 +92,67 @@ class SideMenuDrawer extends StatelessWidget {
             icon: Icons.settings,
             iconColor: Colors.grey,
             borderColor: Colors.grey.withValues(alpha: 0.3),
-            text: 'Configuración',
+            text: l10n.settings,
             onTap: () {
               Navigator.pop(context);
             },
+          ),
+          const SizedBox(height: 24),
+          // ── Language Selector ──
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.gradientStart,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.gold.withValues(alpha: 0.2), width: 1.5),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColors.warning.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(Icons.language, color: AppColors.warning, size: 20),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Text(
+                      l10n.language,
+                      style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  BlocBuilder<LocaleBloc, LocaleState>(
+                    builder: (context, state) {
+                      return DropdownButton<Locale>(
+                        value: state.locale,
+                        dropdownColor: AppColors.card,
+                        underline: const SizedBox.shrink(),
+                        icon: const Icon(Icons.arrow_drop_down, color: Colors.grey),
+                        items: [
+                          DropdownMenuItem(
+                            value: const Locale('es'),
+                            child: Text(l10n.spanish, style: const TextStyle(color: Colors.white, fontSize: 14)),
+                          ),
+                          DropdownMenuItem(
+                            value: const Locale('en'),
+                            child: Text(l10n.english, style: const TextStyle(color: Colors.white, fontSize: 14)),
+                          ),
+                        ],
+                        onChanged: (locale) {
+                          if (locale != null) {
+                            context.read<LocaleBloc>().add(ChangeLocale(locale));
+                          }
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),

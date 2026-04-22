@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:crypto_tracker_lite/l10n/app_localizations.dart';
 import '../bloc/crypto_list_bloc.dart';
 import '../widgets/coin_list_tile.dart';
 import '../widgets/side_menu_drawer.dart';
@@ -14,7 +15,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('CryptoTracker Lite', style: TextStyle(fontWeight: FontWeight.w400)),
+        title: Text(AppLocalizations.of(context)!.appTitle, style: const TextStyle(fontWeight: FontWeight.w400)),
         centerTitle: true,
       ),
       drawer: const SideMenuDrawer(),
@@ -40,9 +41,9 @@ class HomePage extends StatelessWidget {
                       children: [
                         const Icon(Icons.warning_amber_rounded, color: Colors.white),
                         const SizedBox(width: 12),
-                        const Expanded(
+                        Expanded(
                           child: Text(
-                            'Límite de solicitudes excedido.\nReintentando...',
+                            AppLocalizations.of(context)!.rateLimitBanner,
                             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
                           ),
                         ),

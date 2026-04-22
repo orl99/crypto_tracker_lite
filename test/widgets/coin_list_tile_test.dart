@@ -48,6 +48,9 @@ void main() {
 
   Widget createWidgetUnderTest() {
     return MaterialApp(
+      locale: const Locale('es'),
+      supportedLocales: testSupportedLocales,
+      localizationsDelegates: testLocalizationDelegates,
       home: Scaffold(
         body: BlocProvider<FavoritesBloc>.value(
           value: mockFavoritesBloc,

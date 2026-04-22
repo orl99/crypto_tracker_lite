@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:crypto_tracker_lite/l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
 
 class ErrorStateWidget extends StatelessWidget {
@@ -21,17 +22,17 @@ class ErrorStateWidget extends StatelessWidget {
             child: const Icon(Icons.priority_high, color: AppColors.danger, size: 50),
           ),
           const SizedBox(height: 30),
-          const Text(
-            'Hubo un problema 😢',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+          Text(
+            AppLocalizations.of(context)!.errorTitle,
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           const SizedBox(height: 15),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 40.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40.0),
             child: Text(
-              'La API de CoinGecko tiene límites de velocidad. Por favor, espera unos momentos y presiona "Reintentar".',
+              AppLocalizations.of(context)!.errorRateLimitBody,
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey, fontSize: 14),
+              style: const TextStyle(color: Colors.grey, fontSize: 14),
             ),
           ),
           const SizedBox(height: 30),
@@ -49,7 +50,7 @@ class ErrorStateWidget extends StatelessWidget {
                 children: [
                   Icon(Icons.refresh, color: AppColors.blue, size: 20),
                   const SizedBox(width: 8),
-                  Text('Reintentar', style: TextStyle(color: AppColors.blue, fontWeight: FontWeight.w600)),
+                  Text(AppLocalizations.of(context)!.retry, style: TextStyle(color: AppColors.blue, fontWeight: FontWeight.w600)),
                 ],
               ),
             ),

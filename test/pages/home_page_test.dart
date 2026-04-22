@@ -55,6 +55,9 @@ void main() {
 
   Widget createWidgetUnderTest() {
     return MaterialApp(
+      locale: const Locale('es'),
+      supportedLocales: testSupportedLocales,
+      localizationsDelegates: testLocalizationDelegates,
       home: MultiBlocProvider(
         providers: [
           BlocProvider<CryptoListBloc>.value(value: mockCryptoListBloc),

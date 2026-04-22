@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:crypto_tracker_lite/l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -10,7 +11,7 @@ class ProfilePage extends StatelessWidget {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.background,
-        title: const Text('Mi perfil', style: TextStyle(fontWeight: FontWeight.w400)),
+        title: Text(AppLocalizations.of(context)!.myProfile, style: const TextStyle(fontWeight: FontWeight.w400)),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
@@ -79,7 +80,7 @@ class ProfilePage extends StatelessWidget {
                   _buildProfileItem(
                     icon: Icons.person_outline,
                     iconColor: AppColors.blue,
-                    title: 'Nombre',
+                    title: AppLocalizations.of(context)!.nameLabel,
                     value: 'Bryan Vazquez',
                   ),
                   const Padding(
@@ -89,7 +90,7 @@ class ProfilePage extends StatelessWidget {
                   _buildProfileItem(
                     icon: Icons.mail_outline,
                     iconColor: AppColors.warning,
-                    title: 'Correo',
+                    title: AppLocalizations.of(context)!.emailLabel,
                     value: 'bryan@correo.com',
                   ),
                 ],

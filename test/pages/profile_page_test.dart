@@ -10,6 +10,9 @@ void main() {
 
   Widget createWidgetUnderTest() {
     return const MaterialApp(
+      locale: Locale('es'),
+      supportedLocales: testSupportedLocales,
+      localizationsDelegates: testLocalizationDelegates,
       home: ProfilePage(),
     );
   }

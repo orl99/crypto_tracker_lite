@@ -1,8 +1,22 @@
 import 'dart:io';
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:crypto_tracker_lite/l10n/app_localizations.dart';
 import 'package:mocktail/mocktail.dart';
+
+/// Localization delegates to use in test MaterialApp widgets.
+const testLocalizationDelegates = [
+  AppLocalizations.delegate,
+  GlobalMaterialLocalizations.delegate,
+  GlobalWidgetsLocalizations.delegate,
+  GlobalCupertinoLocalizations.delegate,
+];
+
+/// Supported locales for tests.
+const testSupportedLocales = [Locale('es'), Locale('en')];
 
 // Mock classes for HttpClient to handle NetworkImage in tests
 class MockHttpClient extends Mock implements HttpClient {}

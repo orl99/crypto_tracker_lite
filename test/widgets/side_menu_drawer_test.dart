@@ -2,17 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:crypto_tracker_lite/widgets/side_menu_drawer.dart';
 import 'package:crypto_tracker_lite/theme/app_colors.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:crypto_tracker_lite/bloc/locale_bloc.dart';
+import 'package:mocktail/mocktail.dart';
 import '../helpers/test_helper.dart';
+
+class MockLocaleBloc extends Mock implements LocaleBloc {}
 
 void main() {
   setUpAll(() {
     setupMockImageHttp();
   });
 
+  late MockLocaleBloc mockLocaleBloc;
+
+  setUp(() {
+    mockLocaleBloc = MockLocaleBloc();
+    when(() => mockLocaleBloc.state).thenReturn(const LocaleState(Locale('es')));
+    when(() => mockLocaleBloc.stream).thenAnswer((_) => Stream.value(const LocaleState(Locale('es'))));
+  });
+
   Widget createWidgetUnderTest() {
-    return const MaterialApp(
-      home: Scaffold(
-        drawer: SideMenuDrawer(),
+    return MaterialApp(
+      locale: const Locale('es'),
+      supportedLocales: testSupportedLocales,
+      localizationsDelegates: testLocalizationDelegates,
+      home: BlocProvider<LocaleBloc>.value(
+        value: mockLocaleBloc,
+        child: const Scaffold(
+          drawer: SideMenuDrawer(),
+        ),
       ),
     );
   }
