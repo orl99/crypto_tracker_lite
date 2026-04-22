@@ -7,7 +7,8 @@ import '../widgets/error_state_widget.dart';
 import '../theme/app_colors.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final dynamic cacheManager;
+  const HomePage({super.key, this.cacheManager});
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +69,10 @@ class HomePage extends StatelessWidget {
                       itemCount: state.coins.length,
                       separatorBuilder: (context, index) => const Divider(color: AppColors.gradientStart, height: 1),
                       itemBuilder: (context, index) {
-                        return CoinListTile(coin: state.coins[index]);
+                        return CoinListTile(
+                          coin: state.coins[index],
+                          cacheManager: cacheManager,
+                        );
                       },
                     ),
                   ),
