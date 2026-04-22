@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:crypto_tracker_lite/l10n/app_localizations.dart';
+import '../theme/app_colors.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
-      backgroundColor: const Color(0xFF161616),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF161616),
-        title: const Text('Mi perfil', style: TextStyle(fontWeight: FontWeight.w400)),
+        backgroundColor: AppColors.background,
+        title: Text(l10n.myProfile, style: const TextStyle(fontWeight: FontWeight.w400)),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
@@ -34,14 +37,14 @@ class ProfilePage extends StatelessWidget {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.amber.withOpacity(0.5),
+                      color: AppColors.gold.withValues(alpha: 0.5),
                       blurRadius: 30,
                       spreadRadius: 5,
                     ),
                   ],
-                  border: Border.all(color: Colors.amber, width: 3),
+                  border: Border.all(color: AppColors.gold, width: 3),
                   image: const DecorationImage(
-                    image: NetworkImage('https://i.pravatar.cc/150?img=11'),
+                    image: NetworkImage('https://practicaltyping.com/wp-content/uploads/2019/06/Hinata.PNG.png'), // Hinata :D
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -69,31 +72,32 @@ class ProfilePage extends StatelessWidget {
               margin: const EdgeInsets.symmetric(horizontal: 20),
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: const Color(0xFF222222),
+                color: AppColors.gradientStart,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.grey.withOpacity(0.1)),
+                border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
               ),
               child: Column(
                 children: [
                   _buildProfileItem(
                     icon: Icons.person_outline,
-                    iconColor: Colors.blueAccent,
-                    title: 'Nombre',
+                    iconColor: AppColors.blue,
+                    title: l10n.nameLabel,
                     value: 'Bryan Vazquez',
                   ),
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 20.0),
-                    child: Divider(color: Color(0xFF333333), height: 1),
+                    child: Divider(color: AppColors.gradientEnd, height: 1),
                   ),
                   _buildProfileItem(
                     icon: Icons.mail_outline,
-                    iconColor: Colors.orange,
-                    title: 'Correo',
+                    iconColor: AppColors.warning,
+                    title: l10n.emailLabel,
                     value: 'bryan@correo.com',
                   ),
                 ],
               ),
             ),
+            const SizedBox(height: 40),
           ],
         ),
       ),
@@ -111,7 +115,7 @@ class ProfilePage extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: iconColor.withOpacity(0.1),
+            color: iconColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(icon, color: iconColor),

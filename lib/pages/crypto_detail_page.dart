@@ -2,15 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:crypto_tracker_lite/l10n/app_localizations.dart';
 import '../models/coin.dart';
 import '../bloc/crypto_detail_bloc.dart';
 import '../bloc/favorites_bloc.dart';
 import '../widgets/error_state_widget.dart';
+import '../widgets/rate_limit_banner.dart';
+import '../theme/app_colors.dart';
 
 class CryptoDetailPage extends StatefulWidget {
   final Coin coin;
+  final dynamic cacheManager;
 
-  const CryptoDetailPage({super.key, required this.coin});
+  const CryptoDetailPage({super.key, required this.coin, this.cacheManager});
 
   @override
   State<CryptoDetailPage> createState() => _CryptoDetailPageState();
@@ -25,12 +29,13 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
-      backgroundColor: const Color(0xFF161616),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Detalle', style: TextStyle(fontWeight: FontWeight.w400)),
+        title: Text(l10n.detail, style: const TextStyle(fontWeight: FontWeight.w400)),
         centerTitle: true,
-        backgroundColor: const Color(0xFF161616),
+        backgroundColor: AppColors.background,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
@@ -46,7 +51,7 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
               return IconButton(
                 icon: Icon(
                   isFav ? Icons.star : Icons.star_border,
-                  color: isFav ? Colors.amber : Colors.grey,
+                  color: isFav ? AppColors.gold : Colors.grey,
                 ),
                 onPressed: () {
                   context.read<FavoritesBloc>().add(ToggleFavorite(widget.coin.id));
@@ -61,12 +66,15 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const RateLimitBanner(),
+            const SizedBox(height: 10),
             Row(
               children: [
                 CachedNetworkImage(
                   imageUrl: widget.coin.image, 
                   width: 64, 
                   height: 64,
+                  cacheManager: widget.cacheManager,
                   placeholder: (context, url) => const CircularProgressIndicator(),
                 ),
                 const SizedBox(width: 16),
@@ -86,9 +94,9 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
               ],
             ),
             const SizedBox(height: 30),
-            const Text(
-              'Precio actual',
-              style: TextStyle(color: Colors.grey, fontSize: 14),
+            Text(
+              l10n.currentPrice,
+              style: const TextStyle(color: Colors.grey, fontSize: 14),
             ),
             const SizedBox(height: 8),
             Row(
@@ -104,24 +112,24 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
                   margin: const EdgeInsets.only(bottom: 6),
                   decoration: BoxDecoration(
                     color: widget.coin.priceChangePercentage24h >= 0 
-                      ? Colors.green.withOpacity(0.15) 
-                      : Colors.red.withOpacity(0.15),
+                      ? AppColors.success.withValues(alpha: 0.15) 
+                      : AppColors.danger.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                      color: widget.coin.priceChangePercentage24h >= 0 ? Colors.green : Colors.red,
+                      color: widget.coin.priceChangePercentage24h >= 0 ? AppColors.success : AppColors.danger,
                     )
                   ),
                   child: Row(
                     children: [
                       Icon(
                         widget.coin.priceChangePercentage24h >= 0 ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                        color: widget.coin.priceChangePercentage24h >= 0 ? Colors.green : Colors.red,
+                        color: widget.coin.priceChangePercentage24h >= 0 ? AppColors.success : AppColors.danger,
                         size: 20,
                       ),
                       Text(
                         '${(widget.coin.priceChangePercentage24h >= 0 ? '+' : '')}${widget.coin.priceChangePercentage24h.toStringAsFixed(2)}%',
                         style: TextStyle(
-                          color: widget.coin.priceChangePercentage24h >= 0 ? Colors.green : Colors.red,
+                          color: widget.coin.priceChangePercentage24h >= 0 ? AppColors.success : AppColors.danger,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -133,24 +141,24 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
             const SizedBox(height: 30),
             Row(
               children: [
-                Expanded(child: _buildStatCard('Máximo 24h', '\$${widget.coin.high24h.toStringAsFixed(2)}', Icons.arrow_outward, Colors.green)),
+                Expanded(child: _buildStatCard(l10n.high24h, '\$${widget.coin.high24h.toStringAsFixed(2)}', Icons.arrow_outward, AppColors.success)),
                 const SizedBox(width: 16),
-                Expanded(child: _buildStatCard('Mínimo 24h', '\$${widget.coin.low24h.toStringAsFixed(2)}', Icons.call_received, Colors.red)),
+                Expanded(child: _buildStatCard(l10n.low24h, '\$${widget.coin.low24h.toStringAsFixed(2)}', Icons.call_received, AppColors.danger)),
               ],
             ),
             const SizedBox(height: 16),
             Row(
               children: [
-                Expanded(child: _buildStatCard('Capitalización', '\$${(widget.coin.marketCap / 1e9).toStringAsFixed(2)}B', Icons.account_balance_wallet, Colors.blueAccent)),
+                Expanded(child: _buildStatCard(l10n.marketCap, '\$${(widget.coin.marketCap / 1e9).toStringAsFixed(2)}B', Icons.account_balance_wallet, AppColors.blue)),
                 const SizedBox(width: 16),
-                Expanded(child: _buildStatCard('Volumen 24h', '\$${(widget.coin.totalVolume / 1e6).toStringAsFixed(2)}M', Icons.swap_horiz, Colors.orange)),
+                Expanded(child: _buildStatCard(l10n.volume24h, '\$${(widget.coin.totalVolume / 1e6).toStringAsFixed(2)}M', Icons.swap_horiz, AppColors.warning)),
               ],
             ),
             const SizedBox(height: 30),
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: const Color(0xFF222222),
+                color: AppColors.gradientStart,
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Column(
@@ -159,21 +167,21 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Precio histórico (7 días)',
-                        style: TextStyle(color: Colors.grey, fontSize: 16),
+                      Text(
+                        l10n.historicPrice7d,
+                        style: const TextStyle(color: Colors.grey, fontSize: 16),
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: widget.coin.priceChangePercentage24h >= 0 ? Colors.green.withOpacity(0.2) : Colors.red.withOpacity(0.2),
+                          color: widget.coin.priceChangePercentage24h >= 0 ? AppColors.success.withValues(alpha: 0.2) : AppColors.danger.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: widget.coin.priceChangePercentage24h >= 0 ? Colors.green : Colors.red),
+                          border: Border.all(color: widget.coin.priceChangePercentage24h >= 0 ? AppColors.success : AppColors.danger),
                         ),
                         child: Text(
                           '\$${widget.coin.currentPrice.toStringAsFixed(2)}', 
                           style: TextStyle(
-                            color: widget.coin.priceChangePercentage24h >= 0 ? Colors.green : Colors.red, 
+                            color: widget.coin.priceChangePercentage24h >= 0 ? AppColors.success : AppColors.danger, 
                             fontWeight: FontWeight.w600
                           ),
                         ),
@@ -186,14 +194,15 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
                     child: BlocBuilder<CryptoDetailBloc, CryptoDetailState>(
                       builder: (context, state) {
                         if (state is CryptoDetailLoading || state is CryptoDetailInitial) {
-                          return const Center(child: CircularProgressIndicator(color: Colors.amber));
+                          return const Center(child: CircularProgressIndicator(color: AppColors.gold));
                         } else if (state is CryptoDetailError) {
-                          if (state.isRateLimit) {
-                            return const Center(child: Text('Límite de API alcanzado. Espera unos segundos.', style: TextStyle(color: Colors.red)));
-                          }
-                          return const Center(child: Text('Error cargando gráfica', style: TextStyle(color: Colors.red)));
+                          return ErrorStateWidget(
+                            message: state.isRateLimit ? l10n.rateLimitChart : state.message,
+                            isCompact: true,
+                            onRetry: () => context.read<CryptoDetailBloc>().add(FetchCryptoDetail(widget.coin.id)),
+                          );
                         } else if (state is CryptoDetailLoaded) {
-                          return _buildChart(state.chart.prices, widget.coin.priceChangePercentage24h >= 0 ? Colors.green : Colors.red);
+                          return _buildChart(state.chart.prices, widget.coin.priceChangePercentage24h >= 0 ? AppColors.success : AppColors.danger, l10n);
                         }
                         return const SizedBox.shrink();
                       },
@@ -203,9 +212,9 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
               ),
             ),
             const SizedBox(height: 40),
-            const Text(
-              'Acerca de',
-              style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+            Text(
+              l10n.aboutSection,
+              style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             BlocBuilder<CryptoDetailBloc, CryptoDetailState>(
@@ -214,9 +223,9 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
                   return Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF222222),
+                      color: AppColors.gradientStart,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: const Color(0xFF333333)),
+                      border: Border.all(color: AppColors.gradientEnd),
                     ),
                     child: Text(
                       state.detail.description,
@@ -238,9 +247,9 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF222222),
+        color: AppColors.gradientStart,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF333333)), // subtle border
+        border: Border.all(color: AppColors.gradientEnd), // subtle border
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -259,7 +268,7 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
     );
   }
 
-  Widget _buildChart(List<List<double>> prices, Color chartColor) {
+  Widget _buildChart(List<List<double>> prices, Color chartColor, AppLocalizations l10n) {
     if (prices.isEmpty) return const SizedBox.shrink();
 
     final spots = prices.map((e) => FlSpot(e[0], e[1])).toList();
@@ -277,7 +286,7 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
         gridData: FlGridData(
           show: true,
           drawVerticalLine: false,
-          getDrawingHorizontalLine: (value) => FlLine(color: const Color(0xFF333333).withOpacity(0.5), strokeWidth: 1, dashArray: [5, 5]),
+          getDrawingHorizontalLine: (value) => FlLine(color: AppColors.gradientEnd.withValues(alpha: 0.5), strokeWidth: 1, dashArray: [5, 5]),
         ),
         titlesData: FlTitlesData(
           leftTitles: AxisTitles(
@@ -294,8 +303,8 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
             sideTitles: SideTitles(
               showTitles: true,
               getTitlesWidget: (value, meta) {
-                if (value == minX) return const Padding(padding: EdgeInsets.only(top: 8), child: Text('Inicio', style: TextStyle(color: Colors.grey, fontSize: 10)));
-                if (value == maxX) return const Padding(padding: EdgeInsets.only(top: 8), child: Text('Hoy', style: TextStyle(color: Colors.grey, fontSize: 10)));
+                if (value == minX) return Padding(padding: const EdgeInsets.only(top: 8), child: Text(l10n.chartStart, style: const TextStyle(color: Colors.grey, fontSize: 10)));
+                if (value == maxX) return Padding(padding: const EdgeInsets.only(top: 8), child: Text(l10n.chartToday, style: const TextStyle(color: Colors.grey, fontSize: 10)));
                 return const SizedBox.shrink();
               },
             ),
@@ -315,7 +324,7 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
             belowBarData: BarAreaData(
               show: true,
               gradient: LinearGradient(
-                colors: [chartColor.withOpacity(0.3), Colors.transparent],
+                colors: [chartColor.withValues(alpha: 0.3), Colors.transparent],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
