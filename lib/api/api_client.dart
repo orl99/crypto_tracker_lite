@@ -2,9 +2,18 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'exceptions.dart';
 
+/// [ApiClient] is responsible for managing all outgoing network requests to the CoinGecko API.
+/// 
+/// It implements two key mechanisms to ensure compliance with API policies and optimal performance:
+/// 1. **In-Memory Caching**: Responses are stored in a local cache with a 15-second TTL 
+///    to prevent redundant network calls for identical endpoints.
+/// 2. **Rate Limit Handling**: Detects HTTP 429 status codes and implements a 10-second 
+///    block duration, throwing a [RateLimitException] during the cooldown period.
 class ApiClient {
   static const String baseUrl = 'https://api.coingecko.com/api/v3';
-  final http.Client _client = http.Client();
+  final http.Client _client;
+
+  ApiClient({http.Client? client}) : _client = client ?? http.Client();
   
   // Cache storage: URL -> CacheEntry
   final Map<String, _CacheEntry> _cache = {};
@@ -53,6 +62,7 @@ class ApiClient {
   }
 }
 
+/// Internal helper class to store cached response data along with its timestamp.
 class _CacheEntry {
   final dynamic data;
   final DateTime timestamp;
