@@ -15,6 +15,7 @@ Una aplicación móvil built con **Flutter** que permite rastrear precios de cri
 - 🔄 **Caché en memoria** para optimizar llamadas repetidas
 - 📱 **Arquitectura limpia** con BLoC Pattern
 
+Video demo: https://www.loom.com/share/fced771096cf4ab7b079e42c60bb1b08
 ---
 
 ## 🏗️ Stack Técnico
