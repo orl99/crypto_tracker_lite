@@ -9,8 +9,9 @@ import '../theme/app_colors.dart';
 
 class CryptoDetailPage extends StatefulWidget {
   final Coin coin;
+  final dynamic cacheManager;
 
-  const CryptoDetailPage({super.key, required this.coin});
+  const CryptoDetailPage({super.key, required this.coin, this.cacheManager});
 
   @override
   State<CryptoDetailPage> createState() => _CryptoDetailPageState();
@@ -67,6 +68,7 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
                   imageUrl: widget.coin.image, 
                   width: 64, 
                   height: 64,
+                  cacheManager: widget.cacheManager,
                   placeholder: (context, url) => const CircularProgressIndicator(),
                 ),
                 const SizedBox(width: 16),
