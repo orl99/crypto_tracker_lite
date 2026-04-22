@@ -1,4 +1,118 @@
 # crypto_tracker_lite
+
+Una aplicación móvil built con **Flutter** que permite rastrear precios de criptomonedas en tiempo real, ver gráficas históricas, gestionar favoritos y cambiar idioma entre español e inglés.
+
+---
+
+## ✨ Características Principales
+
+- 📊 **Lista de criptomonedas** con precios actualizados y cambio porcentual
+- 📈 **Gráficas históricas** de 7 días para cada criptomoneda
+- ⭐ **Gestión de favoritos** (persistencia local con SharedPreferences)
+- 🌍 **Soporte multi-idioma** (ES/EN)
+- 🎨 **UI moderna y responsiva** con tema oscuro
+- 🛡️ **Manejo elegante de límites de API** (HTTP 429) sin pérdida de datos
+- 🔄 **Caché en memoria** para optimizar llamadas repetidas
+- 📱 **Arquitectura limpia** con BLoC Pattern
+
+---
+
+## 🏗️ Stack Técnico
+
+- **Framework:** Flutter
+- **Gestión de Estado:** BLoC Pattern
+- **HTTP Client:** http package + caché custom
+- **Persistencia Local:** SharedPreferences
+- **API:** CoinGecko API (gratuita)
+- **Gráficas:** FL Chart
+- **DI:** Provider
+
+---
+
+## ⚡ Instrucciones Rápidas
+
+### Requisitos previos
+- Flutter 3.13+
+- Dart 3.0+
+- Xcode (iOS) o Android Studio (Android)
+
+### Instalación y ejecución
+
+```bash
+# 1. Clonar el repositorio
+git clone <repo-url>
+cd crypto_tracker_lite
+
+# 2. Instalar dependencias
+flutter pub get
+
+# 3. Generar código (l10n, BLoC, etc)
+flutter gen-l10n
+flutter pub run build_runner build
+
+# 4. Ejecutar en emulador o dispositivo
+flutter run
+
+# Para ejecutar en modo release
+flutter run --release
+```
+
+### Ejecutar tests
+```bash
+# Tests unitarios
+flutter test
+
+# Con cobertura (requiere lcov)
+flutter test --coverage
+```
+
+---
+
+## Screenshots
+
+<table>
+  <tr>
+    <td align="center">
+      <strong>Home</strong><br>
+      Lista de criptomonedas con precios, cambio 24h y refresh<br><br>
+      <img width="250" src="https://github.com/user-attachments/assets/abeebc91-42b7-42ee-bc9f-94c9a52845d5" />
+    </td>
+    <td align="center">
+      <strong>Detalle</strong><br>
+      Gráfica histórica (7 días), info y botón de favorito<br><br>
+      <img width="250" src="https://github.com/user-attachments/assets/01bc898e-18dd-4b66-bbb0-7018d23e2f37" />
+    </td>
+  </tr>
+
+  <tr>
+    <td align="center">
+      <strong>Menú</strong><br>
+      Drawer con info de usuario y cambio de idioma (ES/EN)<br><br>
+      <img width="250" src="https://github.com/user-attachments/assets/b0644fd6-e217-4861-9c3b-1a7f60ad92a1" />
+    </td>
+    <td align="center">
+      <strong>Favoritos</strong><br>
+      Lista de monedas marcadas como favoritas<br><br>
+      <img width="250" src="https://github.com/user-attachments/assets/2dfb1d8d-baf6-4b9f-a919-6b0c6363f38e" />
+    </td>
+  </tr>
+
+  <tr>
+    <td align="center">
+      <strong>Perfil</strong><br>
+      Cambio de idioma (ES/EN) y configuración<br><br>
+      <img width="250" src="https://github.com/user-attachments/assets/c09215f0-42c6-4d7b-9606-af4225043f8d" />
+    </td>
+    <td align="center">
+      <strong>Rate Limit</strong><br>
+      Banner cuando se activa el error HTTP 429<br><br>
+      <img width="250" src="https://github.com/user-attachments/assets/aec267dc-3054-48a9-a5be-bec3a28c5505" />
+    </td>
+  </tr>
+</table>
+
+---
+
 # 🏗️ Arquitectura y Patrones — CryptoTracker Lite
 
 Documentación completa de los patrones de diseño y la arquitectura utilizada en el proyecto.
