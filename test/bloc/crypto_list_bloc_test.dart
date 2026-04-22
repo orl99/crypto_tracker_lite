@@ -35,7 +35,7 @@ void main() {
     cryptoListBloc.close();
   });
 
-  group('CryptoListBloc Rate Limit & Logic Tests', () {
+  group('CryptoListBloc Tests', () {
     test('initial state is CryptoListInitial', () {
       expect(cryptoListBloc.state, isA<CryptoListInitial>());
     });
@@ -57,7 +57,7 @@ void main() {
     );
 
     blocTest<CryptoListBloc, CryptoListState>(
-      'emits [CryptoListLoading, CryptoListError] when FetchCryptoList fails and no previous data',
+      'emits [CryptoListLoading, CryptoListError] when FetchCryptoList fails due to network error',
       build: () {
         when(() => mockCryptoService.getMarkets())
             .thenThrow(Exception('Network Error'));
@@ -72,13 +72,28 @@ void main() {
     );
 
     blocTest<CryptoListBloc, CryptoListState>(
-      'emits [CryptoListLoaded] with isRateLimitExceeded = true when RateLimitException is thrown and previous data exists',
+      'emits [CryptoListLoading, CryptoListError] with isRateLimit=true when RateLimitException occurs without previous data',
       build: () {
         when(() => mockCryptoService.getMarkets())
-            .thenThrow(RateLimitException('Rate limit'));
+            .thenThrow(RateLimitException('Rate limit exceeded'));
         return cryptoListBloc;
       },
-      seed: () => CryptoListLoaded(dummyCoins), // Simulate existing data
+      act: (bloc) => bloc.add(FetchCryptoList()),
+      expect: () => [
+        isA<CryptoListLoading>(),
+        isA<CryptoListError>()
+            .having((state) => state.isRateLimit, 'isRateLimit', true),
+      ],
+    );
+
+    blocTest<CryptoListBloc, CryptoListState>(
+      'emits [CryptoListLoaded] with isRateLimitExceeded=true when RateLimitException occurs with previous data',
+      build: () {
+        when(() => mockCryptoService.getMarkets())
+            .thenThrow(RateLimitException('Rate limit exceeded'));
+        return cryptoListBloc;
+      },
+      seed: () => CryptoListLoaded(dummyCoins),
       act: (bloc) => bloc.add(FetchCryptoList()),
       expect: () => [
         isA<CryptoListLoaded>()
@@ -88,7 +103,7 @@ void main() {
     );
 
     blocTest<CryptoListBloc, CryptoListState>(
-      'emits [CryptoListLoaded] with isRateLimitExceeded = false when DismissRateLimitWarning is added',
+      'emits [CryptoListLoaded] with isRateLimitExceeded=false when DismissRateLimitWarning is added',
       build: () {
         return cryptoListBloc;
       },

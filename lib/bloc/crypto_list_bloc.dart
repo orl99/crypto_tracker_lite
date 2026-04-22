@@ -21,6 +21,11 @@ abstract class CryptoListEvent {}
 class FetchCryptoList extends CryptoListEvent {}
 class DismissRateLimitWarning extends CryptoListEvent {}
 
+/// [CryptoListBloc] is responsible for managing the main list of cryptocurrencies.
+/// 
+/// It handles fetching coin data from the [CryptoService] and maintains 
+/// state during rate limit events, allowing previously loaded data to persist 
+/// while displaying an orange warning banner.
 class CryptoListBloc extends Bloc<CryptoListEvent, CryptoListState> {
   final CryptoService _cryptoService;
 
