@@ -4,17 +4,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:crypto_tracker_lite/pages/favorites_page.dart';
 import 'package:crypto_tracker_lite/bloc/crypto_list_bloc.dart';
+import 'package:crypto_tracker_lite/bloc/crypto_detail_bloc.dart';
 import 'package:crypto_tracker_lite/bloc/favorites_bloc.dart';
 import 'package:crypto_tracker_lite/models/coin.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import '../helpers/test_helper.dart';
 
 class MockCryptoListBloc extends Mock implements CryptoListBloc {}
+
+class MockCryptoDetailBloc extends Mock implements CryptoDetailBloc {}
+
 class MockFavoritesBloc extends Mock implements FavoritesBloc {}
+
 class MockCacheManager extends Mock implements CacheManager {}
 
 void main() {
   late MockCryptoListBloc mockCryptoListBloc;
+  late MockCryptoDetailBloc mockCryptoDetailBloc;
   late MockFavoritesBloc mockFavoritesBloc;
   late MockCacheManager mockCacheManager;
 
@@ -49,19 +55,36 @@ void main() {
     setupMockImageHttp();
     setupMockPathProvider();
     registerFallbackValue(FetchCryptoList());
+    registerFallbackValue(FetchCryptoDetail(''));
     registerFallbackValue(ToggleFavorite(''));
   });
 
   setUp(() {
     mockCryptoListBloc = MockCryptoListBloc();
+    mockCryptoDetailBloc = MockCryptoDetailBloc();
     mockFavoritesBloc = MockFavoritesBloc();
     mockCacheManager = MockCacheManager();
 
-    when(() => mockCryptoListBloc.state).thenReturn(CryptoListLoaded(dummyCoins));
-    when(() => mockCryptoListBloc.stream).thenAnswer((_) => Stream.value(CryptoListLoaded(dummyCoins)));
-    
-    when(() => mockCacheManager.getFileStream(any(), key: any(named: 'key'), headers: any(named: 'headers'), withProgress: any(named: 'withProgress')))
-        .thenAnswer((_) => Stream.empty());
+    when(() => mockCryptoDetailBloc.state).thenReturn(CryptoDetailInitial());
+    when(
+      () => mockCryptoDetailBloc.stream,
+    ).thenAnswer((_) => Stream.value(CryptoDetailInitial()));
+
+    when(
+      () => mockCryptoListBloc.state,
+    ).thenReturn(CryptoListLoaded(dummyCoins));
+    when(
+      () => mockCryptoListBloc.stream,
+    ).thenAnswer((_) => Stream.value(CryptoListLoaded(dummyCoins)));
+
+    when(
+      () => mockCacheManager.getFileStream(
+        any(),
+        key: any(named: 'key'),
+        headers: any(named: 'headers'),
+        withProgress: any(named: 'withProgress'),
+      ),
+    ).thenAnswer((_) => Stream.empty());
   });
 
   Widget createWidgetUnderTest() {
@@ -72,6 +95,7 @@ void main() {
       home: MultiBlocProvider(
         providers: [
           BlocProvider<CryptoListBloc>.value(value: mockCryptoListBloc),
+          BlocProvider<CryptoDetailBloc>.value(value: mockCryptoDetailBloc),
           BlocProvider<FavoritesBloc>.value(value: mockFavoritesBloc),
         ],
         child: FavoritesPage(cacheManager: mockCacheManager),
@@ -79,19 +103,29 @@ void main() {
     );
   }
 
-  testWidgets('FavoritesPage shows empty state when no favorites', (WidgetTester tester) async {
+  testWidgets('FavoritesPage shows empty state when no favorites', (
+    WidgetTester tester,
+  ) async {
     when(() => mockFavoritesBloc.state).thenReturn(FavoritesLoaded([]));
-    when(() => mockFavoritesBloc.stream).thenAnswer((_) => Stream.value(FavoritesLoaded([])));
+    when(
+      () => mockFavoritesBloc.stream,
+    ).thenAnswer((_) => Stream.value(FavoritesLoaded([])));
 
     await tester.pumpWidget(createWidgetUnderTest());
 
     expect(find.text('Aún no tienes favoritos'), findsOneWidget);
   });
 
-  testWidgets('FavoritesPage shows only favorite coins', (WidgetTester tester) async {
+  testWidgets('FavoritesPage shows only favorite coins', (
+    WidgetTester tester,
+  ) async {
     // Only Bitcoin is favorite
-    when(() => mockFavoritesBloc.state).thenReturn(FavoritesLoaded(['bitcoin']));
-    when(() => mockFavoritesBloc.stream).thenAnswer((_) => Stream.value(FavoritesLoaded(['bitcoin'])));
+    when(
+      () => mockFavoritesBloc.state,
+    ).thenReturn(FavoritesLoaded(['bitcoin']));
+    when(
+      () => mockFavoritesBloc.stream,
+    ).thenAnswer((_) => Stream.value(FavoritesLoaded(['bitcoin'])));
 
     await tester.runAsync(() async {
       await tester.pumpWidget(createWidgetUnderTest());
@@ -102,9 +136,15 @@ void main() {
     });
   });
 
-  testWidgets('FavoritesPage shows multiple favorite coins', (WidgetTester tester) async {
-    when(() => mockFavoritesBloc.state).thenReturn(FavoritesLoaded(['bitcoin', 'ethereum']));
-    when(() => mockFavoritesBloc.stream).thenAnswer((_) => Stream.value(FavoritesLoaded(['bitcoin', 'ethereum'])));
+  testWidgets('FavoritesPage shows multiple favorite coins', (
+    WidgetTester tester,
+  ) async {
+    when(
+      () => mockFavoritesBloc.state,
+    ).thenReturn(FavoritesLoaded(['bitcoin', 'ethereum']));
+    when(
+      () => mockFavoritesBloc.stream,
+    ).thenAnswer((_) => Stream.value(FavoritesLoaded(['bitcoin', 'ethereum'])));
 
     await tester.runAsync(() async {
       await tester.pumpWidget(createWidgetUnderTest());
