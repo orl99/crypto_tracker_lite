@@ -112,7 +112,18 @@ flutter test --coverage
       <img width="250" src="https://github.com/user-attachments/assets/aec267dc-3054-48a9-a5be-bec3a28c5505" />
     </td>
   </tr>
+
+  <tr>
+    <td align="center">
+      <strong>Advertencia de inicio</strong><br>
+      <img width="250" alt="IMG_1990" src="https://github.com/user-attachments/assets/e39e171f-6d66-421a-9e00-4835bcb57c2c" />
+    </td>
+    <td align="center">
+     ...  
+    </td>
+  </tr>
 </table>
+
 
 ---
 
