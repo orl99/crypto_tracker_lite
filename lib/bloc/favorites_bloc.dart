@@ -14,6 +14,11 @@ class ToggleFavorite extends FavoritesEvent {
   ToggleFavorite(this.coinId);
 }
 
+/// [FavoritesBloc] manages the state of the user's favorite cryptocurrencies.
+/// 
+/// It coordinates the loading of saved favorites and the toggling of individual 
+/// coins, utilizing the [FavoritesService] to ensure data is persisted 
+/// across app sessions.
 class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
   final FavoritesService _favoritesService;
 
