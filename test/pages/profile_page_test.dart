@@ -1,19 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:crypto_tracker_lite/pages/profile_page.dart';
+import 'package:crypto_tracker_lite/bloc/crypto_list_bloc.dart';
 import '../helpers/test_helper.dart';
 
+class MockCryptoListBloc extends Mock implements CryptoListBloc {}
+
 void main() {
+  late MockCryptoListBloc mockCryptoListBloc;
+
   setUpAll(() {
     setupMockImageHttp();
   });
 
+  setUp(() {
+    mockCryptoListBloc = MockCryptoListBloc();
+    when(() => mockCryptoListBloc.state).thenReturn(CryptoListInitial());
+    when(() => mockCryptoListBloc.stream).thenAnswer((_) => Stream.value(CryptoListInitial()));
+  });
+
   Widget createWidgetUnderTest() {
-    return const MaterialApp(
-      locale: Locale('es'),
+    return MaterialApp(
+      locale: const Locale('es'),
       supportedLocales: testSupportedLocales,
       localizationsDelegates: testLocalizationDelegates,
-      home: ProfilePage(),
+      home: BlocProvider<CryptoListBloc>.value(
+        value: mockCryptoListBloc,
+        child: const ProfilePage(),
+      ),
     );
   }
 

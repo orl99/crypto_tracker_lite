@@ -57,8 +57,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get noFavoritesYet => 'Aún no tienes favoritos';
 
   @override
-  String get noFavoritesHint =>
-      'Toca la estrella en cualquier moneda\npara añadirla aquí';
+  String get noFavoritesHint => 'Toca la estrella en cualquier moneda\npara añadirla aquí';
 
   @override
   String get profile => 'Perfil';
@@ -79,15 +78,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get errorTitle => 'Hubo un problema 😢';
 
   @override
-  String get errorRateLimitBody =>
-      'La API de CoinGecko tiene límites de velocidad. Por favor, espera unos momentos y presiona \"Reintentar\".';
+  String get errorRateLimitBody => 'La API de CoinGecko tiene límites de velocidad. Por favor, espera unos momentos y presiona \"Reintentar\".';
 
   @override
   String get retry => 'Reintentar';
 
   @override
-  String get rateLimitBanner =>
-      'Límite de solicitudes excedido.\nReintentando...';
+  String get rateLimitBanner => 'Límite de solicitudes excedido.\nReintentando...';
 
   @override
   String get language => 'Idioma';

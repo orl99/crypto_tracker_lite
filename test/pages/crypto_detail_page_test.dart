@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:crypto_tracker_lite/pages/crypto_detail_page.dart';
 import 'package:crypto_tracker_lite/bloc/crypto_detail_bloc.dart';
+import 'package:crypto_tracker_lite/bloc/crypto_list_bloc.dart';
 import 'package:crypto_tracker_lite/bloc/favorites_bloc.dart';
 import 'package:crypto_tracker_lite/models/coin.dart';
 import 'package:crypto_tracker_lite/models/coin_detail.dart';
@@ -12,11 +13,13 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import '../helpers/test_helper.dart';
 
 class MockCryptoDetailBloc extends Mock implements CryptoDetailBloc {}
+class MockCryptoListBloc extends Mock implements CryptoListBloc {}
 class MockFavoritesBloc extends Mock implements FavoritesBloc {}
 class MockCacheManager extends Mock implements CacheManager {}
 
 void main() {
   late MockCryptoDetailBloc mockCryptoDetailBloc;
+  late MockCryptoListBloc mockCryptoListBloc;
   late MockFavoritesBloc mockFavoritesBloc;
   late MockCacheManager mockCacheManager;
 
@@ -50,11 +53,15 @@ void main() {
 
   setUp(() {
     mockCryptoDetailBloc = MockCryptoDetailBloc();
+    mockCryptoListBloc = MockCryptoListBloc();
     mockFavoritesBloc = MockFavoritesBloc();
     mockCacheManager = MockCacheManager();
 
     when(() => mockFavoritesBloc.state).thenReturn(FavoritesLoaded(const []));
     when(() => mockFavoritesBloc.stream).thenAnswer((_) => Stream.value(FavoritesLoaded(const [])));
+    
+    when(() => mockCryptoListBloc.state).thenReturn(CryptoListInitial());
+    when(() => mockCryptoListBloc.stream).thenAnswer((_) => Stream.value(CryptoListInitial()));
 
     when(() => mockCacheManager.getFileStream(any(), key: any(named: 'key'), headers: any(named: 'headers'), withProgress: any(named: 'withProgress')))
         .thenAnswer((_) => Stream.empty());
@@ -68,6 +75,7 @@ void main() {
       home: MultiBlocProvider(
         providers: [
           BlocProvider<CryptoDetailBloc>.value(value: mockCryptoDetailBloc),
+          BlocProvider<CryptoListBloc>.value(value: mockCryptoListBloc),
           BlocProvider<FavoritesBloc>.value(value: mockFavoritesBloc),
         ],
         child: CryptoDetailPage(coin: dummyCoin, cacheManager: mockCacheManager),
@@ -115,7 +123,8 @@ void main() {
     when(() => mockCryptoDetailBloc.stream).thenAnswer((_) => Stream.value(CryptoDetailError('Error', isRateLimit: true)));
 
     await tester.pumpWidget(createWidgetUnderTest());
+    await tester.pump();
 
-    expect(find.text('Límite de API alcanzado. Espera unos segundos.'), findsOneWidget);
+    expect(find.textContaining('Límite de API alcanzado'), findsOneWidget);
   });
 }

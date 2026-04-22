@@ -78,8 +78,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorTitle => 'Something went wrong 😢';
 
   @override
-  String get errorRateLimitBody =>
-      'The CoinGecko API has rate limits. Please wait a moment and press \"Retry\".';
+  String get errorRateLimitBody => 'The CoinGecko API has rate limits. Please wait a moment and press \"Retry\".';
 
   @override
   String get retry => 'Retry';

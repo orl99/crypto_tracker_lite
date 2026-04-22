@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               locale: localeState.locale,
               supportedLocales: AppLocalizations.supportedLocales,
-              localizationsDelegates: const [
+              localizationsDelegates: [
                 AppLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,

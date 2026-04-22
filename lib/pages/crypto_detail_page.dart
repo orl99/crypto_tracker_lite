@@ -7,6 +7,7 @@ import '../models/coin.dart';
 import '../bloc/crypto_detail_bloc.dart';
 import '../bloc/favorites_bloc.dart';
 import '../widgets/error_state_widget.dart';
+import '../widgets/rate_limit_banner.dart';
 import '../theme/app_colors.dart';
 
 class CryptoDetailPage extends StatefulWidget {
@@ -60,15 +61,13 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          const RateLimitBanner(),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const RateLimitBanner(),
+            const SizedBox(height: 10),
             Row(
               children: [
                 CachedNetworkImage(
@@ -198,7 +197,7 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
                           return const Center(child: CircularProgressIndicator(color: AppColors.gold));
                         } else if (state is CryptoDetailError) {
                           return ErrorStateWidget(
-                            message: state.message,
+                            message: state.isRateLimit ? l10n.rateLimitChart : state.message,
                             isCompact: true,
                             onRetry: () => context.read<CryptoDetailBloc>().add(FetchCryptoDetail(widget.coin.id)),
                           );
@@ -241,9 +240,6 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
           ],
         ),
       ),
-    ),
-  ],
-),
     );
   }
 
