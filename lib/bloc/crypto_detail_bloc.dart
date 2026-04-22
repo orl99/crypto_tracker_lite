@@ -37,11 +37,13 @@ class CryptoDetailBloc extends Bloc<CryptoDetailEvent, CryptoDetailState> {
     on<FetchCryptoDetail>((event, emit) async {
       emit(CryptoDetailLoading());
       try {
-        final chartFuture = _cryptoService.getMarketChart(event.id);
-        final detailFuture = _cryptoService.getCoinDetail(event.id);
+        final results = await Future.wait([
+          _cryptoService.getMarketChart(event.id),
+          _cryptoService.getCoinDetail(event.id),
+        ]);
         
-        final chart = await chartFuture;
-        final detail = await detailFuture;
+        final chart = results[0] as MarketChart;
+        final detail = results[1] as CoinDetail;
 
         emit(CryptoDetailLoaded(chart, detail));
       } on RateLimitException catch (e) {

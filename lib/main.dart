@@ -14,8 +14,14 @@ import 'pages/home_page.dart';
 import 'providers/dependency_injection.dart';
 import 'theme/app_colors.dart';
 
+import 'app_bloc_observer.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Set the global BlocObserver to track state changes and errors
+  Bloc.observer = AppBlocObserver();
+  
   final prefs = await SharedPreferences.getInstance();
   
   runApp(MyApp(prefs: prefs));

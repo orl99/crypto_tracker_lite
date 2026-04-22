@@ -4,6 +4,8 @@ import 'package:crypto_tracker_lite/l10n/app_localizations.dart';
 import '../bloc/crypto_list_bloc.dart';
 import '../bloc/favorites_bloc.dart';
 import '../widgets/coin_list_tile.dart';
+import '../widgets/error_state_widget.dart';
+import '../widgets/rate_limit_banner.dart';
 import '../theme/app_colors.dart';
 
 class FavoritesPage extends StatelessWidget {
@@ -33,42 +35,52 @@ class FavoritesPage extends StatelessWidget {
           )
         ],
       ),
-      body: BlocBuilder<CryptoListBloc, CryptoListState>(
-        builder: (context, cryptoState) {
-          if (cryptoState is CryptoListLoading || cryptoState is CryptoListInitial) {
-            return const Center(child: CircularProgressIndicator(color: AppColors.gold));
-          } else if (cryptoState is CryptoListError) {
-            return Center(child: Text(cryptoState.message, style: const TextStyle(color: Colors.white)));
-          } else if (cryptoState is CryptoListLoaded) {
-            return BlocBuilder<FavoritesBloc, FavoritesState>(
-              builder: (context, favState) {
-                if (favState is FavoritesLoaded) {
-                  final favoriteCoins = cryptoState.coins
-                      .where((coin) => favState.favoriteIds.contains(coin.id))
-                      .toList();
+      body: Column(
+        children: [
+          const RateLimitBanner(),
+          Expanded(
+            child: BlocBuilder<CryptoListBloc, CryptoListState>(
+              builder: (context, cryptoState) {
+                if (cryptoState is CryptoListLoading || cryptoState is CryptoListInitial) {
+                  return const Center(child: CircularProgressIndicator(color: AppColors.gold));
+                } else if (cryptoState is CryptoListError) {
+                  return ErrorStateWidget(
+                    message: cryptoState.message,
+                    onRetry: () => context.read<CryptoListBloc>().add(FetchCryptoList()),
+                  );
+                } else if (cryptoState is CryptoListLoaded) {
+                  return BlocBuilder<FavoritesBloc, FavoritesState>(
+                    builder: (context, favState) {
+                      if (favState is FavoritesLoaded) {
+                        final favoriteCoins = cryptoState.coins
+                            .where((coin) => favState.favoriteIds.contains(coin.id))
+                            .toList();
 
-                  if (favoriteCoins.isEmpty) {
-                    return _buildEmptyState(context);
-                  }
+                        if (favoriteCoins.isEmpty) {
+                          return _buildEmptyState(context);
+                        }
 
-                  return ListView.separated(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    itemCount: favoriteCoins.length,
-                    separatorBuilder: (context, index) => const Divider(color: AppColors.gradientStart, height: 1),
-                    itemBuilder: (context, index) {
-                      return CoinListTile(
-                        coin: favoriteCoins[index],
-                        cacheManager: cacheManager,
-                      );
+                        return ListView.separated(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          itemCount: favoriteCoins.length,
+                          separatorBuilder: (context, index) => const Divider(color: AppColors.gradientStart, height: 1),
+                          itemBuilder: (context, index) {
+                            return CoinListTile(
+                              coin: favoriteCoins[index],
+                              cacheManager: cacheManager,
+                            );
+                          },
+                        );
+                      }
+                      return const SizedBox.shrink();
                     },
                   );
                 }
                 return const SizedBox.shrink();
               },
-            );
-          }
-          return const SizedBox.shrink();
-        },
+            ),
+          ),
+        ],
       ),
     );
   }

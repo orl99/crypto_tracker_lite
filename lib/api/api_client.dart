@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'exceptions.dart';
 
@@ -55,9 +56,13 @@ class ApiClient {
       } else {
         throw Exception('Failed to load data (Status ${response.statusCode})');
       }
+    } on SocketException {
+      throw Exception('No internet connection. Please check your settings.');
+    } on FormatException {
+      throw Exception('Invalid response format from server.');
     } catch (e) {
       if (e is RateLimitException) rethrow;
-      throw Exception('Network error: $e');
+      throw Exception('Network error: ${e.toString()}');
     }
   }
 }

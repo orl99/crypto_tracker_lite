@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:crypto_tracker_lite/l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
+import '../widgets/rate_limit_banner.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -25,80 +26,88 @@ class ProfilePage extends StatelessWidget {
           )
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 30),
-            Center(
-              child: Container(
-                width: 150,
-                height: 150,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.gold.withValues(alpha: 0.5),
-                      blurRadius: 30,
-                      spreadRadius: 5,
-                    ),
-                  ],
-                  border: Border.all(color: AppColors.gold, width: 3),
-                  image: const DecorationImage(
-                    image: NetworkImage('https://practicaltyping.com/wp-content/uploads/2019/06/Hinata.PNG.png'), // Hinata :D
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              'Bryan Vazquez',
-              style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.email_outlined, color: Colors.grey[400], size: 16),
-                const SizedBox(width: 6),
-                Text(
-                  'bryan@correo.com',
-                  style: TextStyle(color: Colors.grey[400], fontSize: 15),
-                ),
-              ],
-            ),
-            const SizedBox(height: 40),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: AppColors.gradientStart,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
-              ),
+      body: Column(
+        children: [
+          const RateLimitBanner(),
+          Expanded(
+            child: SingleChildScrollView(
               child: Column(
                 children: [
-                  _buildProfileItem(
-                    icon: Icons.person_outline,
-                    iconColor: AppColors.blue,
-                    title: l10n.nameLabel,
-                    value: 'Bryan Vazquez',
+                  const SizedBox(height: 30),
+                  Center(
+                    child: Container(
+                      width: 150,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.gold.withValues(alpha: 0.5),
+                            blurRadius: 30,
+                            spreadRadius: 5,
+                          ),
+                        ],
+                        border: Border.all(color: AppColors.gold, width: 3),
+                        image: const DecorationImage(
+                          image: NetworkImage('https://practicaltyping.com/wp-content/uploads/2019/06/Hinata.PNG.png'), // Hinata :D
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20.0),
-                    child: Divider(color: AppColors.gradientEnd, height: 1),
+                  const SizedBox(height: 24),
+                  const Text(
+                    'Bryan Vazquez',
+                    style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
                   ),
-                  _buildProfileItem(
-                    icon: Icons.mail_outline,
-                    iconColor: AppColors.warning,
-                    title: l10n.emailLabel,
-                    value: 'bryan@correo.com',
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.email_outlined, color: Colors.grey[400], size: 16),
+                      const SizedBox(width: 6),
+                      Text(
+                        'bryan@correo.com',
+                        style: TextStyle(color: Colors.grey[400], fontSize: 15),
+                      ),
+                    ],
                   ),
+                  const SizedBox(height: 40),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: AppColors.gradientStart,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
+                    ),
+                    child: Column(
+                      children: [
+                        _buildProfileItem(
+                          icon: Icons.person_outline,
+                          iconColor: AppColors.blue,
+                          title: l10n.nameLabel,
+                          value: 'Bryan Vazquez',
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20.0),
+                          child: Divider(color: AppColors.gradientEnd, height: 1),
+                        ),
+                        _buildProfileItem(
+                          icon: Icons.mail_outline,
+                          iconColor: AppColors.warning,
+                          title: l10n.emailLabel,
+                          value: 'bryan@correo.com',
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 40),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

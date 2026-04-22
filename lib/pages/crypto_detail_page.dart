@@ -6,6 +6,7 @@ import 'package:crypto_tracker_lite/l10n/app_localizations.dart';
 import '../models/coin.dart';
 import '../bloc/crypto_detail_bloc.dart';
 import '../bloc/favorites_bloc.dart';
+import '../widgets/error_state_widget.dart';
 import '../theme/app_colors.dart';
 
 class CryptoDetailPage extends StatefulWidget {
@@ -59,11 +60,15 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      body: Column(
+        children: [
+          const RateLimitBanner(),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
             Row(
               children: [
                 CachedNetworkImage(
@@ -192,10 +197,11 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
                         if (state is CryptoDetailLoading || state is CryptoDetailInitial) {
                           return const Center(child: CircularProgressIndicator(color: AppColors.gold));
                         } else if (state is CryptoDetailError) {
-                          if (state.isRateLimit) {
-                            return Center(child: Text(l10n.rateLimitChart, style: const TextStyle(color: Colors.red)));
-                          }
-                          return Center(child: Text(l10n.errorLoadingChart, style: const TextStyle(color: Colors.red)));
+                          return ErrorStateWidget(
+                            message: state.message,
+                            isCompact: true,
+                            onRetry: () => context.read<CryptoDetailBloc>().add(FetchCryptoDetail(widget.coin.id)),
+                          );
                         } else if (state is CryptoDetailLoaded) {
                           return _buildChart(state.chart.prices, widget.coin.priceChangePercentage24h >= 0 ? AppColors.success : AppColors.danger, l10n);
                         }
@@ -235,6 +241,9 @@ class _CryptoDetailPageState extends State<CryptoDetailPage> {
           ],
         ),
       ),
+    ),
+  ],
+),
     );
   }
 
